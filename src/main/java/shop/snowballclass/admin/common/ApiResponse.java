@@ -8,6 +8,14 @@ public record ApiResponse<T>(
         String message,
         T data
 ) {
+    public static <T> ApiResponse<T> success() {
+        return new ApiResponse<>(HttpStatus.OK.value(), null, null);
+    }
+
+    public static <T> ApiResponse<T> success(String message) {
+        return new ApiResponse<>(HttpStatus.OK.value(), message, null);
+    }
+
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(HttpStatus.OK.value(), null, data);
     }
