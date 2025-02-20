@@ -12,11 +12,16 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+
+feign:
+  snowball:
+    lesson:
+      url: http://snowball-class.shop:30002/Lesson
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
