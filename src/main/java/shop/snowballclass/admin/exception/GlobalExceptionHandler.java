@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({IllegalArgumentException.class,
             NoSuchElementException.class,
             DateTimeParseException.class,
-            HttpMessageNotReadableException.class,
-            DataIntegrityViolationException.class})
+            HttpMessageNotReadableException.class}
+    )
     public ResponseEntity<ErrorResponse> handleCommonException(Exception e) {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -44,10 +44,6 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.of(ErrorCode.RESOURCE_NOT_FOUND, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
-
-//    @ExceptionHandler(DataIntegrityViolationException.class)
-//    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-//    }
 
     /**
      * @Valid 으로 binding error 발생시

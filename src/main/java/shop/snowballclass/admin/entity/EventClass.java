@@ -22,6 +22,8 @@ public class EventClass {
     private String issuer;
     @Column(nullable = false, length = 50)
     private String title;
+    @Column(nullable = false)
+    private Integer discountRate;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startDateTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -33,15 +35,17 @@ public class EventClass {
         return EventClass.builder()
                 .issuer(request.issuer())
                 .title(request.title())
+                .discountRate(request.discountRate())
                 .startDateTime(request.startDateTime())
                 .endDateTime(request.endDateTime())
                 .build();
     }
 
     @Builder
-    private EventClass(String issuer, String title, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    private EventClass(String issuer, String title, Integer discountRate, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.issuer = issuer;
         this.title = title;
+        this.discountRate = discountRate;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }

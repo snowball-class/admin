@@ -14,20 +14,34 @@ import shop.snowballclass.admin.service.EventClassService;
 @Tag(name = "어드민 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/admin/event")
+public class EventController {
     private final EventClassService eventClassService;
 
     @Operation(summary = "이벤트 생성")
-    @PostMapping("/event")
+    @PostMapping
     public ApiResponse<EventSimpleResponse> createEvent(@Valid @RequestBody EventCreateRequest request) {
         return ApiResponse.created(eventClassService.createEventClass(request));
     }
 
     @Operation(summary = "이벤트 조회")
-    @GetMapping("/event/{eventId}")
+    @GetMapping("/{eventId}")
     public ApiResponse<EventInfoResponse> getEventInfo(@PathVariable("eventId") Long eventId) {
         return ApiResponse.success(eventClassService.getEventClassInfo(eventId));
     }
+
+//    @Operation(summary = "이벤트 수정")
+//    @PutMapping("/{eventId}")
+//    public ApiResponse updateEvent(@PathVariable("eventId") Long eventId) {
+//        eventClassService.getEventClassInfo(eventId);
+//        return ApiResponse.success();
+//    }
+//
+//    @Operation(summary = "이벤트 삭제")
+//    @DeleteMapping("/{eventId}")
+//    public ApiResponse deleteEvent(@PathVariable("eventId") Long eventId) {
+//        eventClassService.getEventClassInfo(eventId);
+//        return ApiResponse.success();
+//    }
 
 }
