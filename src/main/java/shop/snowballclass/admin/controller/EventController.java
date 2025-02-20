@@ -6,9 +6,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import shop.snowballclass.admin.common.ApiResponse;
-import shop.snowballclass.admin.dto.EventCreateRequest;
-import shop.snowballclass.admin.dto.EventInfoResponse;
-import shop.snowballclass.admin.dto.EventSimpleResponse;
+import shop.snowballclass.admin.dto.event.EventCreateRequest;
+import shop.snowballclass.admin.dto.event.EventInfoResponse;
+import shop.snowballclass.admin.dto.event.EventSimpleResponse;
+import shop.snowballclass.admin.dto.event.EventUpdateRequest;
 import shop.snowballclass.admin.service.EventClassService;
 
 @Tag(name = "어드민 API")
@@ -32,15 +33,14 @@ public class EventController {
 
 //    @Operation(summary = "이벤트 수정")
 //    @PutMapping("/{eventId}")
-//    public ApiResponse updateEvent(@PathVariable("eventId") Long eventId) {
-//        eventClassService.getEventClassInfo(eventId);
-//        return ApiResponse.success();
+//    public ApiResponse updateEvent(@PathVariable("eventId") Long eventId, @Valid @RequestBody EventUpdateRequest request) {
+//        return ApiResponse.success(eventClassService.updateEventClass(eventId, request));
 //    }
 //
 //    @Operation(summary = "이벤트 삭제")
 //    @DeleteMapping("/{eventId}")
 //    public ApiResponse deleteEvent(@PathVariable("eventId") Long eventId) {
-//        eventClassService.getEventClassInfo(eventId);
+//        eventClassService.deleteEventClass(eventId);
 //        return ApiResponse.success();
 //    }
 

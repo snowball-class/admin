@@ -1,4 +1,4 @@
-package shop.snowballclass.admin.dto;
+package shop.snowballclass.admin.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,10 +17,11 @@ public record EventCreateRequest(
         @Schema(description = "이벤트 제목", example = "블랙 프라이데이 할인!")
         String title,
         @NotNull(message = "할인율을 입력해 주세요.")
-        @Min(value = 0, message = "할인율은 0 이상이어야 합니다.")
+        @Min(value = 1, message = "할인율은 1 이상이어야 합니다.")
         @Max(value = 100, message = "할인율은 100%를 넘길 수 없습니다.")
         @Schema(description = "이벤트 할인율", example = "25")
         Integer discountRate,
+        @NotNull(message = "이벤트 시작 시간을 입력해 주세요.")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 시작 시간", example = "2025-11-24T12:00:00")
@@ -30,7 +31,7 @@ public record EventCreateRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 종료 시간", example = "2025-12-01T12:00:00")
         LocalDateTime endDateTime,
-        @NotNull(message = "이벤트에 추가할 클래스들을 입력해 주세요.")
+        @NotNull(message = "이벤트에 추가할 클래스를 하나 이상 입력해 주세요.")
         @Size(min = 1, message = "이벤트는 하나 이상의 클래스를 포함해야 합니다.")
         @Schema(description = "이벤트 클래스 목록", example = "[\"클래스 A\", \"클래스 B\", \"클래스 C\"]")
         List<String> classes
