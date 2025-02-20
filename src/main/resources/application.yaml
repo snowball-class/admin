@@ -22,6 +22,7 @@ feign:
   snowball:
     lesson:
       url: http://snowball-class.shop:30002/Lesson
+#      url: http://localhost:8082/Lesson
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8

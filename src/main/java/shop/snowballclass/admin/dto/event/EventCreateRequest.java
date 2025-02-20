@@ -10,7 +10,7 @@ import java.util.List;
 
 public record EventCreateRequest(
         @Size(min = 2, max = 20, message = "20자 이내로 입력해 주세요.")
-        @Schema(description = "이벤트 발행자", example = "전찬의")
+        @Schema(description = "이벤트 발행자", example = "Jerry")
         String issuer,
         @NotBlank(message = "이벤트 타이틀을 입력해 주세요.")
         @Size(min = 2, max = 30, message = "30자 이내로 입력해 주세요.")
@@ -33,7 +33,7 @@ public record EventCreateRequest(
         LocalDateTime endDateTime,
         @NotNull(message = "이벤트에 추가할 클래스를 하나 이상 입력해 주세요.")
         @Size(min = 1, message = "이벤트는 하나 이상의 클래스를 포함해야 합니다.")
-        @Schema(description = "이벤트 클래스 목록", example = "[\"클래스 A\", \"클래스 B\", \"클래스 C\"]")
-        List<String> classes
+        @Schema(description = "이벤트 클래스 목록 (id)", example = "[1, 15, 6, 7, 2]")
+        List<Long> classes
 ) {
 }

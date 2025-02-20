@@ -1,9 +1,9 @@
 package shop.snowballclass.admin.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import shop.snowballclass.admin.common.ApiResponse;
+import shop.snowballclass.admin.dto.lesson.ApplyEventToLessonRequest;
 import shop.snowballclass.admin.dto.lesson.LessonResponse;
 
 import java.util.List;
@@ -11,6 +11,9 @@ import java.util.List;
 @FeignClient(name = "lesson-service", url = "${feign.snowball.lesson.url}")
 public interface LessonClient {
     @GetMapping("/event/{eventId}")
-    ApiResponse<List<LessonResponse>> getEventLessonList(@PathVariable("eventId") Long eventId);
-
+    ApiResponse<List<LessonResponse>> getEventInfoOfLessons(@PathVariable("eventId") Long eventId);
+    @PatchMapping("/event")
+    ApiResponse applyEventToLesson(@RequestBody ApplyEventToLessonRequest request);
+    @DeleteMapping("/event/{eventId}")
+    ApiResponse deleteEventFromLesson(@PathVariable("eventId") Long eventId);
 }

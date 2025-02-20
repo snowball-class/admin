@@ -11,7 +11,7 @@ import java.util.List;
 public record EventInfoResponse(
         @Schema(description = "이벤트 고유키", example = "1")
         Long id,
-        @Schema(description = "이벤트 발행자", example = "전찬의")
+        @Schema(description = "이벤트 발행자", example = "Jerry")
         String issuer,
         @Schema(description = "이벤트 제목", example = "블랙 프라이데이 할인!")
         String title,
@@ -26,7 +26,7 @@ public record EventInfoResponse(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 생성일", example = "2025-02-18T12:30:16")
         LocalDateTime createdAt,
-        @Schema(description = "이벤트 클래스 목록 (id)", example = "[\"1\", \"15\", \"6\"]")
+        @Schema(description = "이벤트 클래스 목록 (id)")
         List<LessonResponse> classes
 ) {
     public static EventInfoResponse from(EventClass eventClass, List<LessonResponse> classes) {

@@ -10,7 +10,7 @@ import java.util.List;
 
 public record EventUpdateRequest(
         @Size(min = 2, max = 30, message = "30자 이내로 입력해 주세요.")
-        @Schema(description = "이벤트 제목", example = "블랙 프라이데이 할인!")
+        @Schema(description = "이벤트 제목", example = "변경할 데이터만 입력, 클래스 변경시 기존의 클래스까지 모두 입력")
         String title,
         @Min(value = 1, message = "할인율은 1 이상이어야 합니다.")
         @Max(value = 100, message = "할인율은 100%를 넘길 수 없습니다.")
@@ -26,7 +26,7 @@ public record EventUpdateRequest(
         LocalDateTime endDateTime,
         @NotNull(message = "이벤트에 추가할 클래스들을 입력해 주세요.")
         @Size(min = 1, message = "이벤트는 하나 이상의 클래스를 포함해야 합니다.")
-        @Schema(description = "이벤트 클래스 목록 (id)", example = "[\"1\", \"15\", \"6\"]")
+        @Schema(description = "이벤트 클래스 목록 (id)", example = "[1, 15, 6, 7, 2]")
         List<Long> classes
 ) {
 }

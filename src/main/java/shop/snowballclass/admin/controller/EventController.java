@@ -31,17 +31,17 @@ public class EventController {
         return ApiResponse.success(eventClassService.getEventClassInfo(eventId));
     }
 
-//    @Operation(summary = "이벤트 수정")
-//    @PutMapping("/{eventId}")
-//    public ApiResponse updateEvent(@PathVariable("eventId") Long eventId, @Valid @RequestBody EventUpdateRequest request) {
-//        return ApiResponse.success(eventClassService.updateEventClass(eventId, request));
-//    }
-//
-//    @Operation(summary = "이벤트 삭제")
-//    @DeleteMapping("/{eventId}")
-//    public ApiResponse deleteEvent(@PathVariable("eventId") Long eventId) {
-//        eventClassService.deleteEventClass(eventId);
-//        return ApiResponse.success();
-//    }
+    @Operation(summary = "이벤트 수정")
+    @PutMapping("/{eventId}")
+    public ApiResponse updateEvent(@PathVariable("eventId") Long eventId, @Valid @RequestBody EventUpdateRequest request) {
+        return ApiResponse.success(eventClassService.updateEventClass(eventId, request));
+    }
+
+    @Operation(summary = "이벤트 삭제")
+    @DeleteMapping("/{eventId}")
+    public ApiResponse deleteEvent(@PathVariable("eventId") Long eventId) {
+        eventClassService.deleteEventClass(eventId);
+        return ApiResponse.success();
+    }
 
 }

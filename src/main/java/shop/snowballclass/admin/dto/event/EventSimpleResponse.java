@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public record EventSimpleResponse(
         @Schema(description = "이벤트 고유키", example = "1")
         Long id,
-        @Schema(description = "이벤트 발행자", example = "전찬의")
+        @Schema(description = "이벤트 발행자", example = "Jerry")
         String issuer,
         @Schema(description = "이벤트 제목", example = "블랙 프라이데이 할인!")
         String title,

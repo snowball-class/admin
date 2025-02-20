@@ -5,15 +5,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import shop.snowballclass.admin.client.LessonClient;
+import shop.snowballclass.admin.common.ApiResponse;
 import shop.snowballclass.admin.dto.event.EventCreateRequest;
 import shop.snowballclass.admin.dto.event.EventInfoResponse;
 import shop.snowballclass.admin.dto.event.EventSimpleResponse;
 import shop.snowballclass.admin.dto.event.EventUpdateRequest;
+import shop.snowballclass.admin.dto.lesson.ApplyEventToLessonRequest;
 import shop.snowballclass.admin.dto.lesson.LessonResponse;
 import shop.snowballclass.admin.entity.EventClass;
 import shop.snowballclass.admin.repository.EventClassRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -31,24 +35,47 @@ public class EventClassService {
 
     @Transactional
     public EventSimpleResponse createEventClass(EventCreateRequest request) {
-        return EventSimpleResponse.from(eventClassRepository.save(EventClass.from(request)));
+        if (!request.startDateTime().isBefore(request.endDateTime()))
+            throw new IllegalArgumentException("시작 시간은 종료 시간보다 이전이어야 합니다.");
+        if (!request.startDateTime().isAfter(LocalDateTime.now().plusMinutes(5)))
+            throw new IllegalArgumentException("시작 시간은 현재 시간으로부터 최소 5분 이후여야 합니다.");
+
+        EventClass eventClass = eventClassRepository.save(EventClass.from(request));
+        ApiResponse response = lessonClient.applyEventToLesson(ApplyEventToLessonRequest.from(
+                eventClass.getId(), request.discountRate(),
+                request.startDateTime(), request.endDateTime(),
+                request.classes()));
+        if (!response.isOK()) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new RuntimeException("[LessonClient] Failed to apply event to lesson. Status: " + response.status());
+        }
+        return EventSimpleResponse.from(eventClass);
     }
 
     @Transactional(readOnly = true)
     public EventInfoResponse getEventClassInfo(Long eventClassId) {
         EventClass eventInfo = getEventClassById(eventClassId);
-        List<LessonResponse> classes = lessonClient.getEventLessonList(eventClassId).data();
-        return EventInfoResponse.from(eventInfo, classes);
+        ApiResponse<List<LessonResponse>> response = lessonClient.getEventInfoOfLessons(eventClassId);
+        if(!response.isOK())
+            throw new RuntimeException("[LessonClient] Failed to get event Info of lessons. Status: " + response.status());
+        return EventInfoResponse.from(eventInfo, response.data());
     }
 
     @Transactional
     public Long updateEventClass(Long eventClassId, EventUpdateRequest request) {
+        EventClass eventClass = getEventClassById(eventClassId);
+        // Todo: null 체크 로직 수정
+        lessonClient.applyEventToLesson(ApplyEventToLessonRequest.from(
+                eventClass.getId(), request.discountRate(),
+                request.startDateTime(), request.endDateTime(),
+                request.classes()));
         return getEventClassById(eventClassId).update();
     }
 
     @Transactional
     public void deleteEventClass(Long eventClassId) {
-        eventClassRepository.delete(getEventClassById(eventClassId));
+        EventClass eventClass = getEventClassById(eventClassId);
+        if(lessonClient.deleteEventFromLesson(eventClassId).isOK());
+            eventClassRepository.delete(eventClass);
     }
-
 }
