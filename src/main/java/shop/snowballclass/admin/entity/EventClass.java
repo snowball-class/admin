@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 import shop.snowballclass.admin.dto.event.EventCreateRequest;
+import shop.snowballclass.admin.dto.event.EventUpdateRequest;
 
 import java.time.LocalDateTime;
 
@@ -50,7 +51,11 @@ public class EventClass {
         this.endDateTime = endDateTime;
     }
 
-    public Long update() {
+    public Long update(EventUpdateRequest request) {
+        title = request.title();
+        discountRate = request.discountRate();
+        startDateTime = request.startDateTime();
+        endDateTime = request.endDateTime();
         return id;
     }
 }

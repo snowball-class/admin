@@ -31,7 +31,7 @@ public record ApiResponse<T>(
         return new ApiResponse<>(HttpStatus.ACCEPTED, null, data);
     }
 
-    public boolean isOK() {
+    public boolean checkStatusOK() {
         if(HttpStatus.OK.equals(status)) return true;
         else return false;
     }

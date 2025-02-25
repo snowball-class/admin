@@ -12,7 +12,7 @@ import java.util.List;
 public interface LessonClient {
     @GetMapping("/event/{eventId}")
     ApiResponse<List<LessonResponse>> getEventInfoOfLessons(@PathVariable("eventId") Long eventId);
-    @PatchMapping("/event")
+    @PutMapping("/event")
     ApiResponse applyEventToLesson(@RequestBody ApplyEventToLessonRequest request);
     @DeleteMapping("/event/{eventId}")
     ApiResponse deleteEventFromLesson(@PathVariable("eventId") Long eventId);
