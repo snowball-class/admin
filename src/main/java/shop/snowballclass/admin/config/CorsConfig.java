@@ -8,7 +8,8 @@ import java.util.List;
 
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
-    private static final List<String> ALLOWED_ORIGIN = List.of("http://localhost:3000, http://snowball-class.shop", "https://snowball-class.shop");
+    private static final List<String> ALLOWED_ORIGIN = List.of("http://localhost:3000", "http://localhost:8087",
+            "http://snowball-class.shop", "https://snowball-class.shop", "http://snowball-class.shop:30007");
     private static final List<String> ALLOWED_ORIGIN_PATTERN = List.of("http://*.snowball-class.shop", "https://*.snowball-class.shop");
 
     @Override

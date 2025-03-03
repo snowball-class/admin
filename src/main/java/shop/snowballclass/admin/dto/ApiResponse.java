@@ -1,4 +1,4 @@
-package shop.snowballclass.admin.common;
+package shop.snowballclass.admin.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
