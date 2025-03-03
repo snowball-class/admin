@@ -56,6 +56,6 @@ public class EventClass {
         discountRate = request.discountRate();
         startDateTime = request.startDateTime();
         endDateTime = request.endDateTime();
-        return id;
+        return getId();
     }
 }

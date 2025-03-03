@@ -6,7 +6,6 @@ import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record EventUpdateRequest(
         @NotBlank(message = "변경할 이벤트 타이틀을 입력해 주세요.")
@@ -27,10 +26,6 @@ public record EventUpdateRequest(
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 종료 시간", example = "2025-12-01T12:00:00")
-        LocalDateTime endDateTime,
-        @NotNull(message = "이벤트에 추가할 클래스들을 새로 입력해 주세요.")
-        @Size(min = 1, message = "이벤트는 하나 이상의 클래스를 포함해야 합니다.")
-        @Schema(description = "이벤트 클래스 목록 (id)", example = "[3,4,5]")
-        List<Long> classes
+        LocalDateTime endDateTime
 ) {
 }

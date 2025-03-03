@@ -5,23 +5,22 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import shop.snowballclass.admin.common.ApiResponse;
+import shop.snowballclass.admin.dto.ApiResponse;
 import shop.snowballclass.admin.dto.event.EventCreateRequest;
 import shop.snowballclass.admin.dto.event.EventInfoResponse;
-import shop.snowballclass.admin.dto.event.EventSimpleResponse;
 import shop.snowballclass.admin.dto.event.EventUpdateRequest;
 import shop.snowballclass.admin.service.EventClassService;
 
 @Tag(name = "어드민 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/event")
+@RequestMapping("/events")
 public class EventController {
     private final EventClassService eventClassService;
 
     @Operation(summary = "이벤트 생성")
     @PostMapping
-    public ApiResponse<EventSimpleResponse> createEvent(@Valid @RequestBody EventCreateRequest request) {
+    public ApiResponse<Long> createEvent(@Valid @RequestBody EventCreateRequest request) {
         return ApiResponse.created(eventClassService.createEventClass(request));
     }
 
@@ -33,7 +32,7 @@ public class EventController {
 
     @Operation(summary = "이벤트 수정")
     @PutMapping("/{eventId}")
-    public ApiResponse updateEvent(@PathVariable("eventId") Long eventId, @Valid @RequestBody EventUpdateRequest request) {
+    public ApiResponse<Long> updateEvent(@PathVariable("eventId") Long eventId, @Valid @RequestBody EventUpdateRequest request) {
         return ApiResponse.success(eventClassService.updateEventClass(eventId, request));
     }
 

@@ -2,11 +2,9 @@ package shop.snowballclass.admin.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import shop.snowballclass.admin.dto.lesson.LessonResponse;
 import shop.snowballclass.admin.entity.EventClass;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record EventInfoResponse(
         @Schema(description = "이벤트 고유키", example = "1")
@@ -25,11 +23,9 @@ public record EventInfoResponse(
         LocalDateTime endDateTime,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         @Schema(description = "이벤트 생성일", example = "2025-02-18T12:30:16")
-        LocalDateTime createdAt,
-        @Schema(description = "이벤트 클래스 목록 (id)")
-        List<LessonResponse> classes
+        LocalDateTime createdAt
 ) {
-    public static EventInfoResponse from(EventClass eventClass, List<LessonResponse> classes) {
+    public static EventInfoResponse from(EventClass eventClass) {
         return new EventInfoResponse(
                 eventClass.getId(),
                 eventClass.getIssuer(),
@@ -37,8 +33,7 @@ public record EventInfoResponse(
                 eventClass.getDiscountRate(),
                 eventClass.getStartDateTime(),
                 eventClass.getEndDateTime(),
-                eventClass.getCreatedAt(),
-                classes
+                eventClass.getCreatedAt()
         );
     }
 }
