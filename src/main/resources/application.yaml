@@ -6,7 +6,7 @@ spring:
     name: admin-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.34.177.168:3306/mysql8?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://3.34.177.168:3306/mysql8?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: test
     password: 1234
   jpa:
@@ -17,12 +17,6 @@ spring:
     properties:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
-
-feign:
-  snowball:
-    lesson:
-      url: http://snowball-class.shop:30002/Lesson
-#      url: http://localhost:8082/Lesson
 
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
