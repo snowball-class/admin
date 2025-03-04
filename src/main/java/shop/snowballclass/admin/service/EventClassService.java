@@ -1,15 +1,22 @@
 package shop.snowballclass.admin.service;
 
-import jakarta.persistence.EntityNotFoundException;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.snowballclass.admin.client.ViewClient;
+import shop.snowballclass.admin.dto.ApiResponse;
+import shop.snowballclass.admin.dto.client.EventLessonCreateRequest;
 import shop.snowballclass.admin.dto.event.EventCreateRequest;
 import shop.snowballclass.admin.dto.event.EventInfoResponse;
 import shop.snowballclass.admin.dto.event.EventUpdateRequest;
 import shop.snowballclass.admin.entity.EventClass;
+import shop.snowballclass.admin.exception.ErrorCode;
+import shop.snowballclass.admin.exception.common.EntityNotFoundException;
+import shop.snowballclass.admin.exception.common.ExternalServiceException;
 import shop.snowballclass.admin.repository.EventClassRepository;
 
 import java.time.LocalDateTime;
@@ -19,11 +26,12 @@ import java.time.LocalDateTime;
 @Service
 public class EventClassService {
     private final EventClassRepository eventClassRepository;
+    private final ViewClient viewClient;
 
     @Transactional(readOnly = true)
     public EventClass getEventClassById(Long id) {
         return eventClassRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 이벤트입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EVENT_NOT_FOUND, "존재하지 않는 이벤트입니다."));
     }
 
     @Transactional
@@ -34,6 +42,11 @@ public class EventClassService {
             eventClassRepository.saveAndFlush(eventClass);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("입력값이 잘못되었습니다: " + e.getMessage());
+        }
+        try {
+            viewClient.createEventLessons(eventClass.getId(), EventLessonCreateRequest.from(request.lessonIds()));
+        } catch (FeignException e) {
+            throw new ExternalServiceException("[ViewClient] Failed to get response. status: " + e.status());
         }
         return eventClass.getId();
     }
