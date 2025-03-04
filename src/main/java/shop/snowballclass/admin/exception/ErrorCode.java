@@ -18,7 +18,7 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(404, "Resource not found"),
     METHOD_NOT_ALLOWED(405, "Invalid Method"),
     INTERNAL_SERVER_ERROR(500, "Server Error"),
-
+    EXTERNAL_SERVER_ERROR(502, "Bad Gateway"),
 
 
     // Admin
