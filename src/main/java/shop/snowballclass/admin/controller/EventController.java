@@ -11,6 +11,8 @@ import shop.snowballclass.admin.dto.event.EventInfoResponse;
 import shop.snowballclass.admin.dto.event.EventUpdateRequest;
 import shop.snowballclass.admin.service.EventClassService;
 
+import java.util.List;
+
 @Tag(name = "어드민 API")
 @RequiredArgsConstructor
 @RestController
@@ -28,6 +30,12 @@ public class EventController {
     @GetMapping("/{eventId}")
     public ApiResponse<EventInfoResponse> getEventInfo(@PathVariable("eventId") Long eventId) {
         return ApiResponse.success(eventClassService.getEventClassInfo(eventId));
+    }
+
+    @Operation(summary = "등록된 모든 이벤트 조회")
+    @GetMapping
+    public ApiResponse<List<EventInfoResponse>> getAllEventInfo() {
+        return ApiResponse.success(eventClassService.getAllEventClassInfo());
     }
 
     @Operation(summary = "이벤트 수정")

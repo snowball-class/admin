@@ -20,6 +20,8 @@ import shop.snowballclass.admin.exception.common.ExternalServiceException;
 import shop.snowballclass.admin.repository.EventClassRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,6 +58,13 @@ public class EventClassService {
         return EventInfoResponse.from(getEventClassById(eventClassId));
     }
 
+    @Transactional(readOnly = true)
+    public List<EventInfoResponse> getAllEventClassInfo() {
+        return eventClassRepository.findAll().stream()
+                .map(EventInfoResponse::from)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public Long updateEventClass(Long eventClassId, EventUpdateRequest request) {
         validateEventDateTime(request.startDateTime(), request.endDateTime());
@@ -70,8 +79,8 @@ public class EventClassService {
 
     private void validateEventDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         if (!startDateTime.isBefore(endDateTime))
-            throw new IllegalArgumentException("시작 시간은 종료 시간보다 이전이어야 합니다.");
-        if (!startDateTime.isAfter(LocalDateTime.now().plusMinutes(5)))
-            throw new IllegalArgumentException("시작 시간은 현재 시간으로부터 최소 5분 이후여야 합니다.");
+            throw new IllegalArgumentException("시작 시간은 종료 시간 이전여야 합니다.");
+        if (!endDateTime.isAfter(LocalDateTime.now()))
+            throw new IllegalArgumentException("종료 시간은 현재 시간 이후여야 합니다.");
     }
 }
