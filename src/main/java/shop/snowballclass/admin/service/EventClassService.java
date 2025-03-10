@@ -4,12 +4,11 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.snowballclass.admin.client.ViewClient;
-import shop.snowballclass.admin.dto.ApiResponse;
 import shop.snowballclass.admin.dto.client.EventLessonCreateRequest;
+import shop.snowballclass.admin.dto.client.EventLessonResponse;
 import shop.snowballclass.admin.dto.event.EventCreateRequest;
 import shop.snowballclass.admin.dto.event.EventInfoResponse;
 import shop.snowballclass.admin.dto.event.EventUpdateRequest;
@@ -39,18 +38,37 @@ public class EventClassService {
     @Transactional
     public Long createEventClass(EventCreateRequest request) {
         validateEventDateTime(request.startDateTime(), request.endDateTime());
-        EventClass eventClass = EventClass.from(request);
         try {
+            String lessonIds = request.lessonIds().stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
+            List<EventLessonResponse> eventLessonList = viewClient.getEventLessonListByLessonIds(lessonIds).data();
+            List<Long> eventIdList = eventLessonList.stream()
+                    .map(EventLessonResponse::eventId)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            // 이벤트 기간이 겹치는 이벤트 ID 목록 가져오기
+            List<EventClass> overlappingEvents = eventClassRepository.findEventsByTimeRangeAndIds(eventIdList, request.startDateTime(), request.endDateTime());
+            if (!overlappingEvents.isEmpty()) {
+                List<Long> overlappedLessonIds = eventLessonList.stream()
+                        .filter(response -> overlappingEvents.stream()
+                                .anyMatch(event -> event.getId().equals(response.eventId())))
+                        .map(EventLessonResponse::lessonId)
+                        .distinct()
+                        .collect(Collectors.toList());
+                throw new IllegalArgumentException(String.format("다른 이벤트와 기간이 겹치는 클래스가 존재합니다. [Overlapped Lesson Ids : %s]", overlappedLessonIds));
+            }
+
+            EventClass eventClass = EventClass.from(request);
             eventClassRepository.saveAndFlush(eventClass);
+            viewClient.createEventLessons(eventClass.getId(), EventLessonCreateRequest.from(request.lessonIds()));
+            return eventClass.getId();
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("입력값이 잘못되었습니다: " + e.getMessage());
-        }
-        try {
-            viewClient.createEventLessons(eventClass.getId(), EventLessonCreateRequest.from(request.lessonIds()));
         } catch (FeignException e) {
-            throw new ExternalServiceException("[ViewClient] Failed to get response. status: " + e.status());
+            throw new ExternalServiceException(String.format("Failed to get response on createEventClass. [status:%s][message:%s]", e.status(), e.getMessage()));
         }
-        return eventClass.getId();
     }
 
     @Transactional(readOnly = true)
