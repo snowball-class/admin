@@ -50,6 +50,7 @@ public class EventClassService {
 
             // 이벤트 기간이 겹치는 이벤트 ID 목록 가져오기
             List<EventClass> overlappingEvents = eventClassRepository.findEventsByTimeRangeAndIds(eventIdList, request.startDateTime(), request.endDateTime());
+            log.info("overlappingEvents ids: {}", overlappingEvents.stream().map(EventClass::getId).collect(Collectors.toList()));
             if (!overlappingEvents.isEmpty()) {
                 List<Long> overlappedLessonIds = eventLessonList.stream()
                         .filter(response -> overlappingEvents.stream()
@@ -57,7 +58,7 @@ public class EventClassService {
                         .map(EventLessonResponse::lessonId)
                         .distinct()
                         .collect(Collectors.toList());
-                throw new IllegalArgumentException(String.format("다른 이벤트와 기간이 겹치는 클래스가 존재합니다. [Overlapped Lesson Ids : %s]", overlappedLessonIds));
+                throw new IllegalArgumentException(String.format("다른 이벤트와 기간이 겹치는 클래스가 존재합니다. [target lesson ids : %s]", overlappedLessonIds));
             }
 
             EventClass eventClass = EventClass.from(request);

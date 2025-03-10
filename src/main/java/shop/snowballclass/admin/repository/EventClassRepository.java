@@ -14,6 +14,6 @@ public interface EventClassRepository extends JpaRepository<EventClass,Long> {
             "NOT (e.endDateTime < :start OR e.startDateTime > :end)")
     List<EventClass> findEventsByTimeRangeAndIds(
             @Param("eventIds") List<Long> eventIds,
-            @Param("startTime") LocalDateTime start,
-            @Param("endTime") LocalDateTime end);
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end);
 }
